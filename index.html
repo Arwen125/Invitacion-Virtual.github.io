@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invitación Virtual</title>
+
+<link id="favicon" rel="icon" type="image/png" href="frame0.png">
+<script>
+const frames = ["frame0.png", "frame1.png", "frame2.png", "frame3.png"];
+let index = 0;
+const favicon = document.getElementById("favicon");
+
+setInterval(() => {
+    index = (index + 1) % frames.length;
+    favicon.href = frames[index];
+}, 100);
+</script>
+
+<style>
+/* -------------------- CONTENEDOR PRINCIPAL -------------------- */
+#escenario {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    transform-origin: top left;
+    overflow: hidden;
+    cursor: url('cursor.cur'), auto;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    height: 100vh;
+    width: 100vw;
+    cursor: url('cursor.cur'), auto;
+}
+
+@media (max-width: 1920px) {
+    #escenario { transform: scale(calc(100vw / 1920)); }
+}
+@media (max-height: 1080px) {
+    #escenario { transform: scale(calc(100vh / 1080)); }
+}
+
+/* -------------------- FONDO -------------------- */
+#fondo-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* -------------------- PANTALLA INICIAL -------------------- */
+#inicio {
+    position: absolute;
+    top: 749px;
+    left: 958px;
+    width: 300px;
+    height: auto;
+    border: none;
+    background: none;
+    cursor: url('cursor.cur'), pointer;
+    opacity: 1;
+    transition: opacity 5s ease;
+    transform: translate(-150px, -100px);
+    z-index: 10;
+    padding: 0;
+}
+
+#inicio img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#inicio:active img {
+    transform: scale(0.95);
+    filter: brightness(0.8);
+    transition: transform 0.1s, filter 0.1s;
+}
+
+#inicio.oculto { opacity: 0; pointer-events: none; }
+#inicio:hover { transform: translate(-150px, -100px) scale(1.05); }
+
+#imgStardew {
+    position: absolute;
+    top: 540px;
+    left: 960px;
+    width: 800px;
+    height: 800px;
+    background: url('Cartel.png') no-repeat center center;
+    background-size: contain;
+    transform: translate(-400px, -580px);
+    opacity: 1;
+    transition: opacity 5s ease;
+    z-index: 10;
+}
+
+#imgStardew.oculto { opacity: 0; pointer-events: none; }
+
+#inicio5 {
+    position: absolute;
+    top: 462px;
+    left: 866px;
+    width: 300px;
+    height: 300px;
+    background: url('Emote.gif') no-repeat center center;
+    background-size: contain;
+    opacity: 1;
+    transition: opacity 5s ease;
+    z-index: 10;
+}
+
+#inicio5.oculto { opacity: 0; pointer-events: none; }
+
+#inicio6 {
+    position: absolute;
+    top: 462px;
+    left: 918px;
+    width: 300px;
+    height: 300px;
+    background: url('Emote2.gif') no-repeat center center;
+    background-size: contain;
+    transform: rotateY(180deg);
+    opacity: 1;
+    transition: opacity 5s ease;
+    z-index: 10;
+}
+
+#inicio6.oculto { opacity: 0; pointer-events: none; }
+
+/* -------------------- JUNIMOS GIF -------------------- */
+#inicio3 {
+    position: absolute;
+    top: 610px;
+    left: 996px;
+    width: 50px;
+    height: 50px;
+    background: url('JunimoAzul.gif') no-repeat center center;
+    background-size: contain;
+    z-index: 10;
+    transition: opacity 5s ease;
+    cursor: url('cursor.cur'), auto;
+}
+#inicio3.oculto { opacity: 0; pointer-events: none; }
+
+#inicio4 {
+    position: absolute;
+    top: 610px;
+    left: 1038px;
+    width: 50px;
+    height: 50px;
+    background: url('JunimoMorado.gif') no-repeat center center;
+    background-size: contain;
+    z-index: 10;
+    transition: opacity 5s ease;
+    cursor: url('cursor.cur'), auto;
+}
+#inicio4.oculto { opacity: 0; pointer-events: none; }
+
+/* ---------------- ANIMACIÓN DE SALTO JUNIMOS ---------------- */
+@keyframes saltoJunimo {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-20px); }
+    60% { transform: translateY(0); }
+    100% { transform: translateY(0); }
+}
+
+.junimo-salto {
+    animation: saltoJunimo 0.4s ease;
+}
+
+/* -------------------- SOBRE -------------------- */
+.envelope {
+    position: absolute;
+    top: 594px;
+    left: 960px;
+    width: 600px;
+    height: 400px;
+    background: url('Sobre.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 8px;
+    cursor: url('cursor.cur'), auto;
+    opacity: 0;
+    transform: translate(-300px, -200px) scale(0.8);
+    transition: opacity 1.5s ease, transform 1.5s ease;
+    z-index: 1;
+}
+
+.envelope.visible { opacity: 1; transform: translate(-300px, -200px) scale(1); }
+
+.flap {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    width: 100%;
+    height: 400px;
+    background: url('Tapa2.png') no-repeat center top;
+    background-size: cover;
+    transform-origin: top;
+    transition: transform 1s;
+    z-index: 3;
+}
+
+.envelope.open .flap { transform: rotateX(180deg); }
+
+.front {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 400px;
+    background: url('SobreSinTapa.png') no-repeat bottom center;
+    background-size: cover;
+    z-index: 2;
+}
+
+.card {
+    position: absolute;
+    bottom: -230px;
+    left: 70px;
+    width: 480px;
+    height: 600px;
+    background: url('Invitacion.png') no-repeat center top;
+    background-size: contain;
+    transition: transform 1s ease-in-out;
+    transform: translateY(0) scale(1);
+    z-index: 1;
+}
+
+.bloqueado { pointer-events: none; cursor: url('cursor.cur'), auto; }
+
+/* ---------------- BOTÓN MUTE ---------------- */
+#muteButton {
+    position: absolute;
+    top: 78px;
+    left: 20px;
+    z-index: 9999;
+    border: none;
+    background: none;
+    cursor: url('cursor.cur'), auto;
+}
+#muteButton img { width: 30px; height: 30px; }
+
+/* ---------------- BOTONES INVISIBLES JUNIMOS ---------------- */
+.junimoClick {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    cursor: url('cursor.cur'), auto;
+    z-index: 11; /* Más alto que el GIF */
+}
+
+#clickJunimoAzul { 
+    top: 610px; 
+    left: 996px; 
+    padding: 0;  
+    cursor: url('cursor.cur'), auto;
+}
+#clickJunimoMorado { 
+    top: 610px; 
+    left: 1038px;  
+    cursor: url('cursor.cur'),auto; 
+}
+
+/* boton descarga */
+
+#Descarga {
+    position: absolute;
+    top: 1073px;
+    left: 164px;
+    width: 100px;
+    height: auto;
+    border: none;
+    background: none;
+    cursor: url('cursor.cur'), pointer;
+    opacity: 0;
+    transition: opacity 5s ease;
+    transform: translate(-150px, -100px);
+    z-index: 10;
+    padding: 0;
+}
+
+#Descarga img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#Descarga:active img {
+    transform: scale(0.95);
+    filter: brightness(0.8);
+    transition: transform 0.1s, filter 0.1s;
+}
+
+#Descarga.visible {opacity: 1; pointer-events: auto;}
+#Descarga:hover { transform: translate(-150px, -100px) scale(1.05); }
+#CuadroTarta{
+
+    position: absolute;
+    bottom: -144px;
+    left: 730px;
+    width: 480px;
+    height: 600px;
+    background: url('MarcoSolo.png') no-repeat center top;
+    background-size: contain;
+    transform: scale(2.5);
+    z-index: 1;
+} 
+
+#Tarta{
+
+    position: absolute;
+    bottom: 258px;
+    left: 948px;
+    width: 22.5px;
+    height: 22.5px;
+    background: url('TartaSola.png') no-repeat center top;
+    background-size: contain;
+    transform: scale(2.5);
+    z-index: 1;
+    cursor: url('Select.cur'), auto;
+    transform-origin: center center;
+}
+#CuadroTarta.oculto { opacity: 0; pointer-events: none; }
+#Tarta.oculto { opacity: 0; pointer-events: none; }
+#QR {
+    position: absolute;
+    top: 775px;
+    left: -85px;
+    width: 300px;
+    height:300px;
+    background: url('CodigoQR.png') no-repeat center center;
+    border: none;
+    cursor: url('cursor.cur'), pointer;
+    opacity: 0;
+    transition: opacity 5s ease;
+    z-index: 10;
+    padding: 0;
+    transform: scale(0.4);
+}
+#QR.visible {opacity: 1; pointer-events: auto;}
+/* --- Animación de giro tarta --- */
+@keyframes giroTarta {
+    from { transform: scale(2.5) rotate(0deg); }
+    to { transform: scale(2.5) rotate(360deg); }
+}
+
+#Tarta.giro {
+    animation: giroTarta 1s linear;
+}
+#Baile{
+    position: absolute;
+    top: 830px;
+    left: 44px;
+    width: 50px;
+    height: 50px;
+    background: url('Baile.gif') no-repeat center center;
+    background-size: contain;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 5s ease;
+    cursor: url('cursor.cur'), auto;
+}
+#Baile.visible {opacity: 1; pointer-events: auto;}
+#TextoDescarga{
+    position: absolute;
+    top: 737px;
+    left: 49px;
+    width: 175px;
+    height: 111px;
+    background: url('TextoDescarga.png') no-repeat center center;
+    background-size: contain;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 5s ease;
+    cursor: url('cursor.cur'), auto;
+}
+#TextoDescarga.visible {
+    opacity: 1; 
+    pointer-events: auto;
+    animation: levitar 3s ease-in-out infinite;
+}
+@keyframes levitar {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+#Retrato{
+    position: absolute;
+    top: 790px;
+    left: 1650px;
+    width: 256px;
+    height: 212px;
+    background: url('Retrato.png') no-repeat center center;
+    background-size: contain;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 5s ease;
+    cursor: url('cursor.cur'), auto;
+}
+#Retrato.visible {
+    opacity: 1; 
+    pointer-events: auto;
+}
+#RetratoBoton{
+    position: absolute;
+    top: 596px;
+    left: 1664px;
+    width: 231px;
+    height: 208px;
+    background: url('BotonRetrato.png') no-repeat center center;
+    background-size: contain;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 5s ease;
+    cursor: url('cursor.cur'), auto;
+}
+#RetratoBoton.visible {
+    opacity: 1; 
+    pointer-events: auto;
+}
+#RetratoBoton:hover {
+    transform: scale(1.05); /* zoom al pasar el cursor */
+}
+#RetratoBoton:active {
+    transform: scale(0.95);
+    filter: brightness(0.8);
+    transition: transform 0.1s, filter 0.1s;
+}
+</style>
+</head>
+<body>
+
+<div id="escenario">
+
+    <video autoplay muted loop id="fondo-video">
+        <source src="Fondo.mp4" type="video/mp4">
+    </video>
+
+    <div id="imgStardew"></div>
+    <div id="inicio3"></div>
+    <div id="inicio4"></div>
+    <div id="inicio5"></div>
+    <div id="inicio6"></div>
+    <div id="Baile"></div>
+
+    <button id="inicio" onclick="FadeOut()">
+        <img src="Pulsa2.png" alt="Pulsa aquí">
+    </button>
+
+    <div id="sobre" class="envelope">
+        <div class="flap"></div>
+        <div class="card"></div>
+        <div class="front"></div>
+    </div>
+
+    <!-- BOTÓN MUTE -->
+    <button id="muteButton">
+        <img id="muteImg" src="MusicaON.png" alt="Musica ON">
+    </button>
+
+    <!-- BOTONES INVISIBLES JUNIMOS -->
+    <button id="clickJunimoAzul" class="junimoClick"></button>
+    <button id="clickJunimoMorado" class="junimoClick"></button>
+    <a id="Descarga" href="Invitacion.png" download>
+        <img id="DescargaInvitacion" src="BotonDescarga.png">
+    </a>
+    <div id="QR"></div>
+    <div id="CuadroTarta" class="oculto"></div>
+    <div id="Tarta" class="oculto"></div>
+    <div id="Baile"></div>
+    <div id="TextoDescarga"></div>
+    <div id="Retrato"></div>
+    <div id="RetratoBoton"></div>
+</div>
+
+<!-- AUDIOS -->
+<audio id="musica" src="CancionDeFondo.mp3" loop preload="auto"></audio>
+<audio id="sonidoMute" src="SonidoOFF.mp3" preload="auto"></audio>
+<audio id="sonidoUnmute" src="SonidoON.mp3" preload="auto"></audio>
+<audio id="hoverInicio1" src="SonidoSelec1.mp3" preload="auto"></audio>
+<audio id="hoverInicio2" src="SonidoSelec2.mp3" preload="auto"></audio>
+<audio id="SonidoJunimo" src="JunimoSonido.mp3" preload="auto"></audio>
+
+<script>
+const sobre = document.getElementById('sobre');
+const tarjeta = sobre.querySelector('.card');
+const musica = document.getElementById('musica');
+const inicio = document.getElementById('inicio');
+const imgStardew = document.getElementById('imgStardew');
+const inicio3 = document.getElementById('inicio3');
+const inicio4 = document.getElementById('inicio4');
+const inicio5 = document.getElementById('inicio5');
+const inicio6 = document.getElementById('inicio6');
+const Baile = document.getElementById ('Baile');
+const TextoDescarga= document.getElementById ('TextoDescarga');
+const Retrato= document.getElementById ('Retrato');
+const RetratoBoton = document.getElementById ('RetratoBoton');
+let animado = false;
+
+// ---------------- REPRODUCIR MUSICA ----------------
+function reproducirMusica() { musica.play().catch(()=>{}); }
+window.addEventListener('load', reproducirMusica);
+document.body.addEventListener('click', reproducirMusica, { once: true });
+const descarga = document.getElementById('Descarga');
+
+// Bloqueamos el clic hasta que sea visible la descarga
+descarga.addEventListener('click', (e) => {
+    if (!descarga.classList.contains('visible')) {
+        e.preventDefault(); // No se descarga si no es visible
+    }
+});
+
+// ---------------- FADE OUT ----------------
+let primerClick = true;
+function FadeOut() {
+    if (!primerClick) return;
+    primerClick = false;
+
+    // Ocultar todos los elementos iniciales
+    inicio.classList.add('oculto');
+    imgStardew.classList.add('oculto');
+    inicio3.classList.add('oculto');
+    inicio4.classList.add('oculto');
+    inicio5.classList.add('oculto');
+    inicio6.classList.add('oculto');
+
+    // Ocultar botones invisibles
+    document.getElementById("clickJunimoAzul").style.display = "none";
+    document.getElementById("clickJunimoMorado").style.display = "none";
+
+    // Bloquear sobre
+    sobre.classList.add('bloqueado');
+
+    setTimeout(() => { sobre.classList.add('visible'); }, 4000);
+
+    setTimeout(() => {
+        sobre.classList.remove('bloqueado');
+
+        sobre.addEventListener('click', () => {
+            if (animado) return;
+            animado = true;
+            sobre.classList.add('bloqueado');
+            sobre.classList.toggle('open');
+
+            const sonidoPapel = new Audio("SonidoPapel.mp3");
+            sonidoPapel.volume = 0.5;
+            sonidoPapel.play();
+
+            const flap = sobre.querySelector('.flap');
+            const front = sobre.querySelector('.front');
+
+            tarjeta.style.transform = 'translateY(0px) scale(1)';
+            tarjeta.style.zIndex = '1';
+            flap.style.zIndex = '3';
+            front.style.zIndex = '4';
+
+            setTimeout(() => { 
+                tarjeta.style.transform = 'translateY(-50px) scale(1)'; 
+                tarjeta.style.zIndex = '3'; 
+            }, 1000);
+            setTimeout(() => { 
+                tarjeta.style.transform = 'translateY(-240px) scale(1)'; 
+                tarjeta.style.zIndex = '3'; 
+                const sonidoPapel = new Audio("SonidoTarjetaSube.mp3");
+                sonidoPapel.volume = 0.5;
+                sonidoPapel.play();
+            }, 2000);
+            setTimeout(() => { 
+                sobre.classList.remove('open'); 
+            }, 2600);
+            setTimeout(() => { 
+                tarjeta.style.transform = 'translateY(200px) scale(2.5)'; 
+                tarjeta.style.zIndex = '5';
+                const sonidoPapel = new Audio("SonidoTarjetaBaja.mp3");
+                sonidoPapel.volume = 0.5;
+                sonidoPapel.play();
+                 // Hacer visible el botón con fade-in
+                const descarga = document.getElementById('Descarga');
+                const QR = document.getElementById ('QR');
+                QR.classList.add ('visible');
+                descarga.classList.add('visible');
+                Baile.classList.add ('visible');
+                TextoDescarga.classList.add ('visible');
+                Retrato.classList.add ('visible');
+                RetratoBoton.classList.add('visible');
+                RetratoBoton.classList.add('visible');
+
+
+            }, 3000);
+            setTimeout(()=>{
+                CuadroTarta.classList.remove('oculto');
+                Tarta.classList.remove('oculto');
+            }, 4500);
+        });
+    }, 6000);
+}
+
+
+// ---------------- MUTE ----------------
+const botonMute = document.getElementById('muteButton');
+const imgMute = document.getElementById('muteImg');
+const sonidoMute = document.getElementById('sonidoMute');
+const sonidoUnmute = document.getElementById('sonidoUnmute');
+
+if (localStorage.getItem('musicaMuteada') === 'true') {
+    musica.muted = true;
+    imgMute.src = 'MusicaOFF.png';
+}
+
+botonMute.addEventListener('click', () => {
+    musica.muted = !musica.muted;
+    if (musica.muted) {
+        imgMute.src = 'MusicaOFF.png';
+        sonidoMute.currentTime = 0;
+        sonidoMute.play();
+    } else {
+        imgMute.src = 'MusicaON.png';
+        sonidoUnmute.currentTime = 0;
+        sonidoUnmute.play();
+    }
+    localStorage.setItem('musicaMuteada', musica.muted);
+});
+
+// ---------------- HOVER BOTÓN INICIO ----------------
+const hoverSounds = [
+    document.getElementById('hoverInicio1'),
+    document.getElementById('hoverInicio2')
+];
+RetratoBoton.addEventListener('mouseenter', () => {
+    const randomSound = hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
+    randomSound.currentTime = 0;
+    randomSound.play();
+});
+
+// Click para redirigir a la web
+RetratoBoton.addEventListener('click', () => {
+    window.location.href = "https://www.ejemplo.com"; // Cambia la URL
+});
+RetratoBoton.addEventListener('click', () => {
+    window.location.href = "https://jazzybee.itch.io/sdvcharactercreator";
+});
+
+inicio.addEventListener('mouseenter', () => {
+    const randomSound = hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
+    randomSound.currentTime = 0;
+    randomSound.play();
+});
+// Hover boton descarga
+Descarga.addEventListener('mouseenter', () => {
+    const randomSound = hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
+    randomSound.currentTime = 0;
+    randomSound.play();
+});
+// ---------------- BOTONES INVISIBLES JUNIMOS CON EMOTES ----------------
+const botonesJunimos = [
+    { boton: document.getElementById("clickJunimoAzul"), junimo: inicio3, emote: inicio5 },
+    { boton: document.getElementById("clickJunimoMorado"), junimo: inicio4, emote: inicio6 }
+];
+
+botonesJunimos.forEach(({boton, junimo, emote}) => {
+    boton.addEventListener("click", () => {
+        const sonido = new Audio("JunimoSonido.mp3");
+        sonido.volume = 0.5;
+        sonido.play();
+
+        // Animación de salto Junimo
+        junimo.classList.remove("junimo-salto");
+        void junimo.offsetWidth;
+        junimo.classList.add("junimo-salto");
+
+        // Animación sincronizada del emote
+        emote.classList.remove("junimo-salto");
+        void emote.offsetWidth;
+        emote.classList.add("junimo-salto");
+    });
+});
+const sonidoGiro = new Audio("GiroTarta.mp3");
+sonidoGiro.volume = 0.5;
+
+Tarta.addEventListener('click', () => {
+    Tarta.classList.remove('giro');
+    void Tarta.offsetWidth; // reinicia la animación
+    Tarta.classList.add('giro');
+    sonidoGiro.currentTime = 0;
+    sonidoGiro.play();
+});
+
+</script>
+
+</body>
+</html>
